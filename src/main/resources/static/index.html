@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Tailor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e5e7eb;
+            border-radius: 10px;
+        }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb { background-color: #d1d5db; }
+        iconify-icon { stroke-width: 1.5; }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes glint {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .resume-draft-body > h5:first-of-type {
+            margin-top: 0;
+        }
+        .resume-draft-body p + p {
+            margin-top: 0.65rem;
+        }
+    </style>
+</head>
+<body class="bg-[#fafafa] text-gray-900 antialiased min-h-screen flex flex-col items-center pb-12 sm:pb-20">
+
+<header class="w-full bg-gradient-to-b from-[#F0F8FF]/80 to-transparent border-b border-gray-200/60 animate-fade-in mb-8 sm:mb-12 z-50 pt-6 pb-10 sm:pt-8 sm:pb-14">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-10 sm:mb-12">
+            <div class="flex items-center gap-3 group transition-transform duration-300">
+                <div class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-900 text-white tracking-tighter font-semibold text-xs sm:text-sm shadow-[0_2px_8px_rgba(30,58,138,0.2)] relative overflow-hidden shrink-0">
+                    ART
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[glint_0.8s_ease-in-out]"></div>
+                </div>
+                <span class="text-base sm:text-lg font-semibold tracking-tight text-blue-900">AI Resume Tailor</span>
+            </div>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-gray-900 transition-colors flex items-center bg-white p-1.5 rounded-full border border-gray-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.03)]" aria-label="GitHub">
+                <iconify-icon icon="solar:code-circle-linear" class="text-base sm:text-lg"></iconify-icon>
+            </a>
+        </div>
+        <div class="max-w-2xl">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-gray-900 mb-4">
+                Tailor Your Resume With AI
+            </h1>
+            <p class="text-base sm:text-lg text-gray-500 font-normal leading-relaxed">
+                Instantly adapt your resume to any job description. Optimize your resume for every role in seconds.
+            </p>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-6xl w-full px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+    <section class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-gray-200/60 p-5 sm:p-7 flex flex-col">
+        <h2 class="text-base sm:text-lg font-medium tracking-tight mb-5 text-gray-900">
+            Provide Resume &amp; Job Description
+        </h2>
+
+        <div class="bg-gray-50 p-1 rounded-lg inline-flex mb-5 border border-gray-100/50 self-start">
+            <button type="button" id="tabPaste" class="text-xs sm:text-sm font-medium px-4 py-1.5 rounded-md bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-gray-200/50 text-gray-900 transition-all">
+                Paste Resume Text
+            </button>
+            <button type="button" id="tabUpload" class="text-xs sm:text-sm font-normal px-4 py-1.5 rounded-md text-gray-500 hover:text-gray-700 transition-all">
+                Upload Resume (PDF)
+            </button>
+        </div>
+
+        <div id="textInputView" class="mb-6 flex-grow flex flex-col">
+            <textarea id="resumeText" class="w-full flex-grow border border-gray-200 rounded-xl p-4 text-sm focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none resize-none min-h-[12rem] sm:min-h-[16rem] text-gray-700 placeholder:text-gray-400 bg-transparent transition-all" placeholder="Paste your current resume content here..."></textarea>
+        </div>
+
+        <div id="fileInputView" class="hidden mb-6 flex-grow flex flex-col items-center justify-center border-2 border-dashed border-gray-200 hover:border-gray-300 rounded-xl bg-gray-50/50 transition-colors cursor-pointer group min-h-[12rem] sm:min-h-[16rem]">
+            <input type="file" id="file" accept=".pdf,application/pdf" class="hidden">
+            <div class="w-10 h-10 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform duration-300">
+                <iconify-icon icon="solar:upload-linear" class="text-gray-500 text-lg"></iconify-icon>
+            </div>
+            <span id="fileLabel" class="text-sm font-medium text-gray-700">Browse file or drag and drop</span>
+            <span class="text-xs text-gray-400 mt-1">PDF only</span>
+        </div>
+
+        <div class="mb-2">
+            <label for="jobDescription" class="text-sm font-normal text-gray-700 mb-2 block">Job Description</label>
+            <textarea id="jobDescription" class="w-full border border-gray-200 rounded-xl p-4 text-sm focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none resize-y min-h-[8rem] text-gray-700 placeholder:text-gray-400 bg-transparent transition-all" placeholder="Paste the target job description here..."></textarea>
+        </div>
+
+        <div class="flex items-center justify-between mb-6 mt-2 min-h-4">
+            <div class="flex items-center gap-1.5">
+                <iconify-icon icon="solar:lock-keyhole-linear" class="text-gray-400 text-xs"></iconify-icon>
+                <span class="text-[11px] sm:text-xs text-gray-400">Processed securely via API.</span>
+            </div>
+            <span id="errorMessage" class="text-[11px] sm:text-xs text-red-500 font-normal hidden text-right max-w-[55%]"></span>
+        </div>
+
+        <button type="button" id="analyzeBtn" class="w-full bg-gray-900 text-white hover:bg-gray-800 font-medium text-sm py-2.5 sm:py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed group">
+            <iconify-icon icon="solar:magic-stick-3-linear" class="text-base group-disabled:hidden"></iconify-icon>
+            <iconify-icon icon="solar:spinner-linear" class="text-base animate-spin hidden group-disabled:block"></iconify-icon>
+            <span class="group-disabled:hidden">Analyze Resume</span>
+            <span class="hidden group-disabled:block">Analyzing...</span>
+        </button>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-gray-200/60 p-5 sm:p-7 flex flex-col h-full relative overflow-hidden min-h-[30rem]">
+        <div class="flex justify-between items-center mb-6 z-10 shrink-0 border-b border-gray-100/50 pb-4">
+            <h2 class="text-base sm:text-lg font-medium tracking-tight text-gray-900">AI Review &amp; Suggestions</h2>
+            <button type="button" id="copyBtn" disabled class="text-xs font-medium text-gray-500 hover:text-gray-900 flex items-center gap-1.5 transition-colors bg-gray-50 hover:bg-gray-100 px-2.5 py-1.5 rounded-lg border border-gray-200/60 disabled:opacity-50 disabled:cursor-not-allowed">
+                <iconify-icon icon="solar:copy-linear"></iconify-icon>
+                Copy Feedback
+            </button>
+        </div>
+
+        <div id="emptyState" class="flex-grow flex flex-col items-center justify-center text-center z-0 bg-white absolute inset-0 pt-16 px-4">
+            <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-4 border border-gray-100/60 shadow-sm">
+                <iconify-icon icon="solar:document-text-linear" class="text-2xl text-gray-300"></iconify-icon>
+            </div>
+            <p class="text-sm text-gray-500 max-w-[220px] font-normal leading-relaxed">
+                Run an analysis to see AI feedback on your resume for this specific job.
+            </p>
+        </div>
+
+        <div id="resultState" class="hidden flex-grow flex flex-col z-10 overflow-y-auto pr-1 sm:pr-2 custom-scrollbar space-y-6 pb-2"></div>
+    </section>
+</main>
+
+<script>
+    const API_BASE = '';
+
+    const tabPaste = document.getElementById('tabPaste');
+    const tabUpload = document.getElementById('tabUpload');
+    const textInputView = document.getElementById('textInputView');
+    const fileInputView = document.getElementById('fileInputView');
+    const resumeText = document.getElementById('resumeText');
+    const jobDescription = document.getElementById('jobDescription');
+    const fileInput = document.getElementById('file');
+    const fileLabel = document.getElementById('fileLabel');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const emptyState = document.getElementById('emptyState');
+    const resultState = document.getElementById('resultState');
+    const copyBtn = document.getElementById('copyBtn');
+
+    let mode = 'paste';
+    let lastCopyText = '';
+    let lastImprovedResume = '';
+
+    resultState.addEventListener('click', (e) => {
+        const btn = e.target.closest('#copyDraftBtn');
+        if (!btn || !lastImprovedResume) return;
+        e.preventDefault();
+        const label = btn.querySelector('.copy-draft-label');
+        navigator.clipboard.writeText(lastImprovedResume).then(() => {
+            if (label) {
+                const prev = label.textContent;
+                label.textContent = 'Copied';
+                label.classList.add('text-emerald-700');
+                setTimeout(() => {
+                    label.textContent = prev;
+                    label.classList.remove('text-emerald-700');
+                }, 1800);
+            }
+        }).catch(() => showError('Could not copy draft.'));
+    });
+
+    function isBulletLine(line) {
+        return /^\s*(?:\d+\.\s+|[-•*▪·◦]\s+)/.test(line);
+    }
+
+    function stripBulletPrefix(line) {
+        return line.replace(/^\s*(?:\d+\.\s+|[-•*▪·◦]\s+)/, '').trim();
+    }
+
+    function isLikelySectionHeader(t) {
+        const s = t.trim();
+        if (!s || s.length > 88) return false;
+        if (/:$/.test(s)) return true;
+        const noColon = s.replace(/:\s*$/, '');
+        const rx = /^(professional\s+)?summary|objective|profile|about|work\s+experience|experience|employment(\s+history)?|education|academic|skills|technical\s+skills|core\s+competencies|key\s+skills|projects?|certifications?|certificates?|awards|publications|languages|references|volunteer|leadership|interests$/i;
+        if (rx.test(noColon)) return true;
+        const lettersOnly = s.replace(/[^A-Za-z]/g, '');
+        if (lettersOnly.length >= 3 && s.length <= 52 && lettersOnly === lettersOnly.toUpperCase()) {
+            const words = s.split(/\s+/).filter(Boolean);
+            if (words.length >= 1 && words.length <= 9) return true;
+        }
+        return false;
+    }
+
+    function formatImprovedResumeHtml(raw) {
+        const lines = raw.split(/\r?\n/);
+        let html = '';
+        let i = 0;
+
+        function flushParagraph(parts) {
+            if (!parts.length) return;
+            const text = parts.join(' ').trim();
+            if (text) {
+                html += `<p class="text-[15px] sm:text-base leading-[1.65] text-gray-800">${escapeHtml(text)}</p>`;
+            }
+        }
+
+        while (i < lines.length) {
+            const line = lines[i];
+            const trimmed = line.trim();
+            if (!trimmed) {
+                i++;
+                continue;
+            }
+
+            if (isBulletLine(line)) {
+                const items = [];
+                while (i < lines.length && isBulletLine(lines[i])) {
+                    const item = stripBulletPrefix(lines[i]);
+                    if (item) items.push(item);
+                    i++;
+                }
+                html += '<ul class="my-4 space-y-3 border-l-2 border-blue-100 pl-4 ml-0.5">';
+                for (const item of items) {
+                    html += `<li class="text-[15px] sm:text-base leading-[1.65] text-gray-800 pl-1">${escapeHtml(item)}</li>`;
+                }
+                html += '</ul>';
+                continue;
+            }
+
+            if (isLikelySectionHeader(trimmed)) {
+                const title = trimmed.replace(/:\s*$/, '');
+                html += `<h5 class="mt-8 text-[11px] font-semibold uppercase tracking-[0.16em] text-blue-900 border-b-2 border-blue-900/15 pb-2 mb-4">${escapeHtml(title)}</h5>`;
+                i++;
+                continue;
+            }
+
+            const para = [];
+            while (i < lines.length) {
+                const l = lines[i];
+                if (!l.trim()) break;
+                if (isBulletLine(l)) break;
+                if (isLikelySectionHeader(l.trim())) break;
+                para.push(l.trim());
+                i++;
+            }
+            flushParagraph(para);
+        }
+
+        return html || `<p class="text-[15px] leading-relaxed text-gray-800 whitespace-pre-wrap">${escapeHtml(raw)}</p>`;
+    }
+
+    function setMode(next) {
+        mode = next;
+        const pasteActive = next === 'paste';
+        tabPaste.className = pasteActive
+            ? 'text-xs sm:text-sm font-medium px-4 py-1.5 rounded-md bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-gray-200/50 text-gray-900 transition-all'
+            : 'text-xs sm:text-sm font-normal px-4 py-1.5 rounded-md text-gray-500 hover:text-gray-700 transition-all';
+        tabUpload.className = !pasteActive
+            ? 'text-xs sm:text-sm font-medium px-4 py-1.5 rounded-md bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-gray-200/50 text-gray-900 transition-all'
+            : 'text-xs sm:text-sm font-normal px-4 py-1.5 rounded-md text-gray-500 hover:text-gray-700 transition-all';
+        textInputView.classList.toggle('hidden', !pasteActive);
+        fileInputView.classList.toggle('hidden', pasteActive);
+    }
+
+    tabPaste.addEventListener('click', () => setMode('paste'));
+    tabUpload.addEventListener('click', () => setMode('upload'));
+
+    fileInputView.addEventListener('click', () => fileInput.click());
+    fileInputView.addEventListener('dragover', (e) => { e.preventDefault(); fileInputView.classList.add('border-blue-300', 'bg-blue-50/30'); });
+    fileInputView.addEventListener('dragleave', () => fileInputView.classList.remove('border-blue-300', 'bg-blue-50/30'));
+    fileInputView.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileInputView.classList.remove('border-blue-300', 'bg-blue-50/30');
+        const f = e.dataTransfer.files?.[0];
+        if (f && (f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'))) {
+            fileInput.files = e.dataTransfer.files;
+            fileLabel.textContent = f.name;
+        } else {
+            showError('Please drop a PDF file.');
+        }
+    });
+    fileInput.addEventListener('change', () => {
+        const f = fileInput.files?.[0];
+        fileLabel.textContent = f ? f.name : 'Browse file or drag and drop';
+    });
+
+    function showError(msg) {
+        errorMessage.textContent = msg;
+        errorMessage.classList.remove('hidden');
+    }
+    function clearError() {
+        errorMessage.classList.add('hidden');
+    }
+
+    function setLoading(loading) {
+        analyzeBtn.disabled = loading;
+    }
+
+    function parseAiPayload(raw) {
+        let t = String(raw).trim();
+        if (t.startsWith('```')) {
+            t = t.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/s, '');
+        }
+        return JSON.parse(t);
+    }
+
+    function scoreLabel(score) {
+        if (score >= 80) return 'Strong Match Potential';
+        if (score >= 60) return 'Good Alignment';
+        if (score >= 40) return 'Moderate Fit';
+        return 'Needs Improvement';
+    }
+
+    function escapeHtml(s) {
+        const div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+    }
+
+    function renderResult(data) {
+        const score = Math.min(100, Math.max(0, Number(data.atsScore) || 0));
+        const missing = Array.isArray(data.missingSkills) ? data.missingSkills : [];
+        const suggestions = Array.isArray(data.suggestions) ? data.suggestions : [];
+        const improved = typeof data.improvedResume === 'string' ? data.improvedResume : '';
+
+        lastImprovedResume = improved;
+
+        const summary = improved
+            ? improved.slice(0, 280) + (improved.length > 280 ? '…' : '')
+            : 'Review missing skills and suggestions below to improve ATS alignment.';
+
+        const dash = `${score}, 100`;
+
+        let html = `
+            <div class="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-start gap-4 shadow-sm">
+                <div class="flex flex-col items-center justify-center shrink-0">
+                    <div class="relative flex items-center justify-center w-11 h-11">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-gray-200/60" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+                            <path class="text-gray-900" stroke-dasharray="${dash}" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+                        </svg>
+                        <span class="absolute text-xs font-medium text-gray-800">${score}</span>
+                    </div>
+                    <span class="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-medium">Fit Score</span>
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium text-gray-900 mb-1">${escapeHtml(scoreLabel(score))}</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed font-normal">${escapeHtml(summary)}</p>
+                </div>
+            </div>`;
+
+        if (missing.length) {
+            html += `
+            <div>
+                <h4 class="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2 border-l-2 border-gray-300 pl-2">Missing Keywords (Gaps)</h4>
+                <div class="flex flex-wrap gap-2">
+                    ${missing.map((k) => `<span class="inline-flex items-center px-2 py-1 rounded-md bg-white border border-gray-200 text-gray-600 text-xs font-medium shadow-[0_1px_2px_rgba(0,0,0,0.02)]">${escapeHtml(String(k))}</span>`).join('')}
+                </div>
+                <p class="text-xs text-gray-500 mt-2 font-normal">Consider weaving these terms organically into your experience section if applicable.</p>
+            </div>`;
+        }
+
+        if (suggestions.length) {
+            html += `
+            <div>
+                <h4 class="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2 border-l-2 border-gray-300 pl-2">Actionable Improvements</h4>
+                <ul class="space-y-2.5">
+                    ${suggestions.map((s) => `
+                    <li class="flex items-start gap-2.5">
+                        <iconify-icon icon="solar:check-circle-linear" class="text-gray-400 shrink-0 mt-0.5 text-sm"></iconify-icon>
+                        <span class="text-sm text-gray-600 font-normal">${escapeHtml(String(s))}</span>
+                    </li>`).join('')}
+                </ul>
+            </div>`;
+        }
+
+        if (improved) {
+            html += `
+            <div class="rounded-2xl border border-gray-200/90 bg-gradient-to-b from-white via-white to-slate-50/50 shadow-[0_6px_32px_rgba(15,23,42,0.06)] overflow-hidden ring-1 ring-slate-200/60">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between px-4 sm:px-5 py-4 bg-[linear-gradient(135deg,rgba(30,58,138,0.06)_0%,transparent_55%)] border-b border-gray-100/90">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-900 text-white shrink-0 shadow-sm">
+                                <iconify-icon icon="solar:document-text-linear" class="text-lg"></iconify-icon>
+                            </span>
+                            <span>Improved resume draft</span>
+                        </div>
+                        <p class="mt-2 text-xs text-gray-500 leading-relaxed max-w-xl pl-10 sm:pl-0">
+                            Sections and bullets are detected automatically so you can scan the layout. Edit any block to match your voice.
+                        </p>
+                    </div>
+                    <button type="button" id="copyDraftBtn" class="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-medium text-gray-700 shadow-sm hover:border-gray-300 hover:bg-gray-50 transition-colors">
+                        <iconify-icon icon="solar:copy-linear" class="text-sm"></iconify-icon>
+                        <span class="copy-draft-label">Copy plain text</span>
+                    </button>
+                </div>
+                <div class="resume-draft-body px-4 sm:px-6 py-5 sm:py-6 max-h-[min(36rem,58vh)] overflow-y-auto custom-scrollbar bg-white/80">
+                    ${formatImprovedResumeHtml(improved)}
+                </div>
+            </div>`;
+        }
+
+        resultState.innerHTML = html;
+        emptyState.classList.add('hidden');
+        resultState.classList.remove('hidden');
+
+        const lines = [];
+        lines.push(`ATS / Fit score: ${score}`);
+        lines.push(`Summary: ${summary}`);
+        if (missing.length) lines.push(`Missing skills: ${missing.join(', ')}`);
+        suggestions.forEach((s, i) => lines.push(`Suggestion ${i + 1}: ${s}`));
+        if (improved) lines.push('', 'Improved resume:', improved);
+        lastCopyText = lines.join('\n');
+        copyBtn.disabled = false;
+    }
+
+    analyzeBtn.addEventListener('click', async () => {
+        clearError();
+        const jd = jobDescription.value.trim();
+        if (!jd) {
+            showError('Please enter a job description.');
+            return;
+        }
+
+        if (mode === 'paste') {
+            const rt = resumeText.value.trim();
+            if (!rt) {
+                showError('Please paste your resume text.');
+                return;
+            }
+            setLoading(true);
+            try {
+                const res = await fetch(`${API_BASE}/ai/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ resumeText: rt, jobDescription: jd }),
+                });
+                const text = await res.text();
+                if (!res.ok) {
+                    showError(text || `Request failed (${res.status})`);
+                    return;
+                }
+                renderResult(parseAiPayload(text));
+            } catch (e) {
+                showError(e.message || 'Network error');
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            const f = fileInput.files?.[0];
+            if (!f) {
+                showError('Please choose a PDF resume.');
+                return;
+            }
+            setLoading(true);
+            try {
+                const fd = new FormData();
+                fd.append('file', f);
+                fd.append('jobDescription', jd);
+                const res = await fetch(`${API_BASE}/ai/upload-resume`, {
+                    method: 'POST',
+                    body: fd,
+                });
+                const text = await res.text();
+                if (!res.ok) {
+                    showError(text || `Request failed (${res.status})`);
+                    return;
+                }
+                renderResult(parseAiPayload(text));
+            } catch (e) {
+                showError(e.message || 'Network error');
+            } finally {
+                setLoading(false);
+            }
+        }
+    });
+
+    copyBtn.addEventListener('click', async () => {
+        if (!lastCopyText) return;
+        try {
+            await navigator.clipboard.writeText(lastCopyText);
+        } catch {
+            showError('Could not copy to clipboard.');
+        }
+    });
+</script>
+</body>
+</html>

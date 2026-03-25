@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/ai")
+@CrossOrigin(origins = "*")
 public class ResumeController {
     private final ResumeService resumeService;
 

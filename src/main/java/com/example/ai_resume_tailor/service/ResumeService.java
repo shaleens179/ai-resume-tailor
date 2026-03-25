@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 public class ResumeService {
 
-    private final String API_KEY = "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";
+    private final String API_KEY = "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";
 
     public String analyzeResume(String resumeText, String jobDescription) throws JsonProcessingException {
 
